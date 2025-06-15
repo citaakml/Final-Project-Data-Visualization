@@ -74,7 +74,7 @@ with tab1:
             recs = recommend(selected_movie, top_n)
             if not recs.empty:
                 for _, row in recs.iterrows():
-                    st.markdown(f"### 🎥 {row['title']}")
+                    st.markdown(f"### {row['title']}")
                     st.write(f"**Rating:** {row['vote_average']} | **Popularitas:** {round(row['popularity'], 1)} | **Skor Kemiripan:** {row['similarity']}")
                     st.write(row['overview'])
                     st.markdown("---")
