@@ -12,7 +12,7 @@ Aplikasi interaktif berbasis **Streamlit** yang menyediakan sistem rekomendasi f
   - Jumlah film dirilis per tahun
   - Tren rating atau popularitas per dekade
 
-- 🎛**Antarmuka Interaktif**  
+- **Antarmuka Interaktif**  
   Dibangun dengan Streamlit dan mendukung pemfilteran serta analisis eksploratif.
 
 ## Dataset
