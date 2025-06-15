@@ -37,7 +37,9 @@ File yang digunakan: `tmdb_5000_movies.csv`
    Install dependensi
 
 2. **Install Dependency**
+   ```bash
    pip install -r requirements.txt
 
-3. **Jalankan Aplikasi Streamlit**
+4. **Jalankan Aplikasi Streamlit**
+   ```bash
    streamlit run app.py
