@@ -42,7 +42,6 @@ def recommend(title, top_n=5):
     recommendations['similarity'] = [round(i[1], 3) for i in sim_scores]
     return recommendations[['title', 'overview', 'vote_average', 'popularity', 'similarity']]
 
-# App Title & Team Info
 st.title("Movie Recommender & Analytics")
 st.markdown(
     """
@@ -136,15 +135,12 @@ with tab2:
     ax.axis('off')
     st.pyplot(fig)
 
-    # Scatter Plot Budget vs Rating
-    st.subheader("Scatter Plot: Budget vs Rating")
-    scatter_data = df_filtered.dropna(subset=['budget', 'vote_average']).copy()
-    scatter_data['genre_utama'] = scatter_data['genres'].apply(lambda x: x.split()[0] if x else 'Unknown')
-
-    chart_scatter = alt.Chart(scatter_data).mark_circle(size=80, opacity=0.7).encode(
-        x=alt.X('budget:Q', title='Budget (USD)', scale=alt.Scale(zero=False)),
-        y=alt.Y('vote_average:Q', title='Rating Film', scale=alt.Scale(zero=False)),
-        color=alt.Color('genre_utama:N', legend=alt.Legend(title="Genre Utama")),
-        tooltip=['title:N', 'budget:Q', 'vote_average:Q', 'genre_utama:N']
-    ).properties(width=700, height=400).interactive()
+    st.subheader("Scatter Plot: Budget vs Rating (Judul Film)")
+    scatter_data = df_filtered.dropna(subset=['budget', 'vote_average'])
+    chart_scatter = alt.Chart(scatter_data).mark_circle(size=70, opacity=0.6).encode(
+        x=alt.X('budget:Q', title='Budget'),
+        y=alt.Y('vote_average:Q', title='Rating'),
+        tooltip=['title', 'budget', 'vote_average'],
+        color=alt.value('#2ca02c')
+    ).interactive().properties(width=700, height=400)
     st.altair_chart(chart_scatter)
