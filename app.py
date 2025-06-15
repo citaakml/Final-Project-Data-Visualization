@@ -126,7 +126,7 @@ with tab2:
     ).properties(width=700, height=400)
     st.altair_chart(chart_pop)
 
-    st.subheader("💬 WordCloud dari Sinopsis Film")
+    st.subheader("WordCloud dari Sinopsis Film")
     overview_text = ' '.join(df_filtered['overview'].dropna().astype(str))
     stopwords = set(STOPWORDS)
     stopwords.update(["film", "cerita", "kisah", "seorang", "dengan", "dan", "yang", "untuk", "dalam"])
@@ -136,12 +136,15 @@ with tab2:
     ax.axis('off')
     st.pyplot(fig)
 
-    st.subheader("💸 Scatter Plot: Budget vs Rating")
-    scatter_data = df_filtered.dropna(subset=['budget', 'vote_average'])
-    chart_scatter = alt.Chart(scatter_data).mark_circle(size=80, opacity=0.6).encode(
-        x=alt.X('budget:Q', title='Budget'),
-        y=alt.Y('vote_average:Q', title='Rating'),
-        tooltip=['title', 'budget', 'vote_average'],
-        color=alt.value('#1f77b4')
-    ).interactive().properties(width=700, height=400)
+    # Scatter Plot Budget vs Rating
+    st.subheader("Scatter Plot: Budget vs Rating")
+    scatter_data = df_filtered.dropna(subset=['budget', 'vote_average']).copy()
+    scatter_data['genre_utama'] = scatter_data['genres'].apply(lambda x: x.split()[0] if x else 'Unknown')
+
+    chart_scatter = alt.Chart(scatter_data).mark_circle(size=80, opacity=0.7).encode(
+        x=alt.X('budget:Q', title='Budget (USD)', scale=alt.Scale(zero=False)),
+        y=alt.Y('vote_average:Q', title='Rating Film', scale=alt.Scale(zero=False)),
+        color=alt.Color('genre_utama:N', legend=alt.Legend(title="Genre Utama")),
+        tooltip=['title:N', 'budget:Q', 'vote_average:Q', 'genre_utama:N']
+    ).properties(width=700, height=400).interactive()
     st.altair_chart(chart_scatter)
