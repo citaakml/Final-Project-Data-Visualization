@@ -1,22 +1,21 @@
-# 🎬 TMDB Movie Recommender & Analytics
+# TMDB Movie Recommender & Analytics
 
-Aplikasi interaktif berbasis **Streamlit** yang menyediakan sistem rekomendasi film dan visualisasi tren dari **TMDB 5000 Movie Dataset**.  
-Pengguna dapat mencari film serupa berdasarkan judul filem, maka akan memunculkan deskripsi sinopsis, serta mengeksplorasi tren genre dan jumlah perilisan film per tahun.
+Aplikasi interaktif berbasis **Streamlit** yang menyediakan sistem rekomendasi film dan visualisasi tren dari **TMDB 5000 Movie Dataset**. Pengguna dapat mencari film serupa berdasarkan judul filem, maka akan memunculkan deskripsi sinopsis, serta mengeksplorasi tren genre dan jumlah perilisan film per tahun.
 
-## 📌 Fitur Utama
+## Fitur Utama
 
-- 🔍 **Sistem Rekomendasi Film**  
+- **Sistem Rekomendasi Film**  
   Berdasarkan kemiripan sinopsis menggunakan TF-IDF dan cosine similarity.
 
-- 📊 **Visualisasi Tren Film**  
+- **Visualisasi Tren Film**  
   - Genre paling populer
   - Jumlah film dirilis per tahun
   - Tren rating atau popularitas per dekade
 
-- 🎛️ **Antarmuka Interaktif**  
+- 🎛**Antarmuka Interaktif**  
   Dibangun dengan Streamlit dan mendukung pemfilteran serta analisis eksploratif.
 
-## 📂 Dataset
+## Dataset
 
 Dataset yang digunakan:  
 🔗 [TMDB 5000 Movie Dataset – Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
