@@ -1,5 +1,5 @@
-streamlit>=1.30.0
-pandas>=2.2.0
-plotly>=5.19.0
-openpyxl>=3.1.2
-pillow>=10.2.0
+streamlit
+pandas
+numpy
+scikit-learn
+altair
