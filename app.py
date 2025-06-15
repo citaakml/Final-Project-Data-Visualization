@@ -40,7 +40,6 @@ tfidf = TfidfVectorizer(stop_words='english')
 tfidf_matrix = tfidf.fit_transform(df['overview'])
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-# Recommendation function
 def recommend(title, top_n=5):
     idx = df[df['title'] == title].index
     if idx.empty:
@@ -52,7 +51,6 @@ def recommend(title, top_n=5):
     recommendations['similarity'] = [round(i[1], 3) for i in sim_scores]
     return recommendations[['title', 'overview', 'vote_average', 'popularity', 'similarity']]
 
-# Title & Info
 st.title("TMDB Movie Recommender & Analytics")
 st.markdown("""
 Citakamalia (203012320021)  
@@ -67,25 +65,36 @@ with tab1:
     st.header("Rekomendasi Film Berdasarkan Sinopsis")
     movie_list = df['title'].sort_values().unique()
     selected_movie = st.selectbox("Pilih film favoritmu:", movie_list)
-    top_n = st.slider("Jumlah rekomendasi:", 1, 10, 5)
+    top_n = st.slider("Jumlah rekomendasi berdasarkan sinopsis:", 1, 10, 5)
 
-    if st.button("Rekomendasikan"):
+    if st.button("Rekomendasikan dari Sinopsis"):
         with st.spinner("Mencari film yang mirip..."):
             recs = recommend(selected_movie, top_n)
             if not recs.empty:
                 for _, row in recs.iterrows():
-                    st.markdown(f"### {row['title']}")
+                    st.markdown(f"### 🎥 {row['title']}")
                     st.write(f"**Rating:** {row['vote_average']} | **Popularitas:** {round(row['popularity'], 1)} | **Skor Kemiripan:** {row['similarity']}")
                     st.write(row['overview'])
                     st.markdown("---")
             else:
                 st.warning("Film tidak ditemukan dalam daftar.")
 
+    st.header("Rekomendasi Film Berdasarkan Genre")
+    genre_input = st.selectbox("Pilih genre:", genre_options)
+    n_genre = st.slider("Jumlah rekomendasi berdasarkan genre:", 1, 10, 5)
+
+    genre_recommend = df[df['genres'].str.contains(genre_input)].sort_values(by='popularity', ascending=False).head(n_genre)
+
+    for _, row in genre_recommend.iterrows():
+        st.markdown(f"### {row['title']}")
+        st.write(f"**Rating:** {row['vote_average']} | **Popularitas:** {round(row['popularity'], 1)}")
+        st.write(row['overview'])
+        st.markdown("---")
+
 # Tab 2: Visualisasi
 with tab2:
-    st.header("Eksplorasi Film Berdasarkan Tahun & Genre")
+    st.header("📈 Eksplorasi Film Berdasarkan Tahun & Genre")
 
-    # Jumlah Film per Tahun
     st.subheader("Jumlah Film Dirilis per Tahun")
     yearly = df_filtered['release_year'].value_counts().sort_index().reset_index()
     yearly.columns = ['Tahun', 'Jumlah Film']
@@ -94,7 +103,6 @@ with tab2:
     ).properties(width=700, height=400)
     st.altair_chart(chart_year)
 
-    # Distribusi Rating
     st.subheader("Distribusi Rating Film")
     chart_rating = alt.Chart(df_filtered).mark_bar().encode(
         x=alt.X('vote_average:Q', bin=alt.Bin(maxbins=20), title="Rating"),
@@ -103,7 +111,6 @@ with tab2:
     ).properties(width=700, height=400)
     st.altair_chart(chart_rating)
 
-    # Distribusi Durasi
     st.subheader("Distribusi Durasi Film")
     chart_runtime = alt.Chart(df_filtered.dropna(subset=['runtime'])).mark_bar().encode(
         x=alt.X('runtime:Q', bin=alt.Bin(maxbins=30), title="Durasi (menit)"),
@@ -112,7 +119,6 @@ with tab2:
     ).properties(width=700, height=400)
     st.altair_chart(chart_runtime)
 
-    # Film Terpopuler
     st.subheader("10 Film Paling Populer")
     top_pop = df_filtered.sort_values(by='popularity', ascending=False).head(10)[['title', 'popularity']]
     chart_pop = alt.Chart(top_pop).mark_bar().encode(
@@ -122,7 +128,6 @@ with tab2:
     ).properties(width=700, height=400)
     st.altair_chart(chart_pop)
 
-    # Scatter Plot: Budget vs Rating by Genre
     st.subheader("Korelasi Budget vs Rating (warna berdasarkan Genre Utama)")
     scatter_data = df_filtered.dropna(subset=['budget', 'vote_average'])
     scatter_data = scatter_data[scatter_data['budget'] > 0]
@@ -136,7 +141,6 @@ with tab2:
     ).interactive().properties(width=700, height=400)
     st.altair_chart(chart_scatter)
 
-    # WordCloud: Berdasarkan overview
     st.subheader("WordCloud Berdasarkan Sinopsis Film")
     all_text = ' '.join(df_filtered['overview'].dropna().astype(str).tolist())
     wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='viridis').generate(all_text)
