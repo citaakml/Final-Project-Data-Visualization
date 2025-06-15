@@ -50,7 +50,7 @@ tab1, tab2 = st.tabs(["Rekomendasi Film", "Eksplorasi Visualisasi"])
 # Tab 1: Genre-based recommendation
 with tab1:
     st.header("Rekomendasi Film Berdasarkan Genre")
-    st.markdown("Berikut adalah film dengan popularitas tertinggi sesuai genre yang kamu pilih di sidebar.")
+    st.markdown("Berikut adalah film dengan popularitas tertinggi sesuai genre.")
 
     n_genre = st.slider("Jumlah film ditampilkan:", 1, 20, 5)
 
@@ -67,7 +67,7 @@ with tab1:
 
 # Tab 2: Visualizations
 with tab2:
-    st.header("📈 Eksplorasi Film Berdasarkan Tahun & Genre")
+    st.header("Eksplorasi Film Berdasarkan Tahun & Genre")
 
     st.subheader("Jumlah Film Dirilis per Tahun")
     yearly = df_filtered['release_year'].value_counts().sort_index().reset_index()
