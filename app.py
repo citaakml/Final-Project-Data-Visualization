@@ -24,33 +24,19 @@ def load_data():
 
 df = load_data()
 
-# Global filter
+# Sidebar - Global filter
 st.sidebar.header("Filter Global")
 selected_years = st.sidebar.slider("Tahun Rilis", int(df['release_year'].min()), int(df['release_year'].max()), (2000, 2015))
 genre_options = sorted(set(' '.join(df['genres']).split()))
 selected_genres = st.sidebar.multiselect("Genre", genre_options, default=["Action", "Comedy"])
 
+# Apply global filters
 df_filtered = df[
     (df['release_year'].between(selected_years[0], selected_years[1])) &
     (df['genres'].apply(lambda g: any(genre in g for genre in selected_genres)))
 ]
 
-# TF-IDF + cosine similarity
-tfidf = TfidfVectorizer(stop_words='english')
-tfidf_matrix = tfidf.fit_transform(df['overview'])
-cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
-
-def recommend(title, top_n=5):
-    idx = df[df['title'] == title].index
-    if idx.empty:
-        return []
-    idx = idx[0]
-    sim_scores = list(enumerate(cosine_sim[idx]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:top_n+1]
-    recommendations = df.iloc[[i[0] for i in sim_scores]]
-    recommendations['similarity'] = [round(i[1], 3) for i in sim_scores]
-    return recommendations[['title', 'overview', 'vote_average', 'popularity', 'similarity']]
-
+# Title
 st.title("TMDB Movie Recommender & Analytics")
 st.markdown("""
 Citakamalia (203012320021)  
@@ -58,40 +44,28 @@ Ihsani Hawa Arsytania (203012320027)
 Arliyanna Nilla (203012320035)
 """)
 
+# Tabs
 tab1, tab2 = st.tabs(["Rekomendasi Film", "Eksplorasi Visualisasi"])
 
-# Tab 1: Rekomendasi Film
+# Tab 1: Genre-based recommendation
 with tab1:
-    st.header("Rekomendasi Film Berdasarkan Sinopsis")
-    movie_list = df['title'].sort_values().unique()
-    selected_movie = st.selectbox("Pilih film favoritmu:", movie_list)
-    top_n = st.slider("Jumlah rekomendasi berdasarkan sinopsis:", 1, 10, 5)
-
-    if st.button("Rekomendasikan dari Sinopsis"):
-        with st.spinner("Mencari film yang mirip..."):
-            recs = recommend(selected_movie, top_n)
-            if not recs.empty:
-                for _, row in recs.iterrows():
-                    st.markdown(f"### 🎥 {row['title']}")
-                    st.write(f"**Rating:** {row['vote_average']} | **Popularitas:** {round(row['popularity'], 1)} | **Skor Kemiripan:** {row['similarity']}")
-                    st.write(row['overview'])
-                    st.markdown("---")
-            else:
-                st.warning("Film tidak ditemukan dalam daftar.")
-
     st.header("Rekomendasi Film Berdasarkan Genre")
-    genre_input = st.selectbox("Pilih genre:", genre_options)
-    n_genre = st.slider("Jumlah rekomendasi berdasarkan genre:", 1, 10, 5)
+    st.markdown("Berikut adalah film dengan popularitas tertinggi sesuai genre yang kamu pilih di sidebar.")
 
-    genre_recommend = df[df['genres'].str.contains(genre_input)].sort_values(by='popularity', ascending=False).head(n_genre)
+    n_genre = st.slider("Jumlah film ditampilkan:", 1, 20, 5)
 
-    for _, row in genre_recommend.iterrows():
-        st.markdown(f"### {row['title']}")
-        st.write(f"**Rating:** {row['vote_average']} | **Popularitas:** {round(row['popularity'], 1)}")
-        st.write(row['overview'])
-        st.markdown("---")
+    genre_recommend = df_filtered.sort_values(by='popularity', ascending=False).head(n_genre)
 
-# Tab 2: Visualisasi
+    if genre_recommend.empty:
+        st.warning("Tidak ada film yang cocok dengan filter.")
+    else:
+        for _, row in genre_recommend.iterrows():
+            st.markdown(f"### {row['title']}")
+            st.write(f"**Rating:** {row['vote_average']} | **Popularitas:** {round(row['popularity'], 1)}")
+            st.write(row['overview'])
+            st.markdown("---")
+
+# Tab 2: Visualizations
 with tab2:
     st.header("📈 Eksplorasi Film Berdasarkan Tahun & Genre")
 
