@@ -1,6 +1,6 @@
 # Movie Recommender & Analytics
 
-Aplikasi interaktif berbasis **Streamlit** yang menyediakan sistem rekomendasi film dan visualisasi tren dari **TMDB 5000 Movie Dataset**. Pengguna dapat mencari film serupa berdasarkan judul film, maka akan memunculkan deskripsi sinopsis, serta mengeksplorasi tren genre dan jumlah perilisan film per tahun.
+Aplikasi interaktif berbasis **Streamlit** yang menyediakan sistem rekomendasi film dan visualisasi tren dari **TMDB 5000 Movie Dataset** dari tahun 1916-2017. Pengguna dapat mencari film serupa berdasarkan judul film, maka akan memunculkan deskripsi sinopsis, serta mengeksplorasi tren genre dan jumlah perilisan film per tahun.
 
 ## Fitur Utama
 
